@@ -68,7 +68,11 @@ background-image: linear-gradient(to top, rgb(224, 224, 224) 0%, rgb(255, 255, 2
 	position:relative;
 	height:100%;
 	background-color:#ccc;
-	width:40%;
+	width:0%;
+	-webkit-transition: width 0.3s ease-in;
+	-moz-transition: width 0.3s ease-in;
+	-o-transition: width 0.3s ease-in;
+	transition: width 0.3s ease-in;
 }
 .loading-bar-num{
 	position:absolute;
@@ -191,6 +195,30 @@ background-image: linear-gradient(to bottom, rgb(224, 224, 224) 0%, rgb(255, 255
 	background-color:#272727;
 	
 }
+.com-home-screen-item{
+	position:absolute;
+	top:0;
+	left:0;
+	width: 100%;
+	height: 100%;
+	background-position:center;
+	background-repeat:no-repeat;
+	background-size:cover;
+	opacity:0;
+}
+.com-home-screen-item.in{
+	-webkit-animation: fadeIn 4s 1 running 0 both;
+	-moz-animation: fadeIn 4s 1 running 0 both;
+	-o-animation: fadeIn 4s 1 running 0 both;
+	animation:fadeIn 4s 1 running 0 both;
+}
+.com-home-screen-item.out{
+	-webkit-animation: fadeOut 4s 1 running 0 both;
+	-moz-animation: fadeOut 4s 1 running 0 both;
+	-o-animation: fadeOut 4s 1 running 0 both;
+	animation:fadeOut 4s 1 running 0 both;
+}
+
 .com-home-bottom{
 	position:absolute;
 	width:100%;
@@ -319,8 +347,11 @@ cursor:pointer;
   top:0;
   left:0;
   min-width: 1024px;
-  width: auto;
+  width: 100%;
   height: 100%;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-size:cover;
   opacity:0;
 }
 .gallery-slideShow-fullImage.in{
@@ -351,10 +382,10 @@ cursor:pointer;
 	color:#E5E5E5;
 }
 .gallery-slideShow-arrow-left{	
-	left:0px;
+	left:10px;
 }
 .gallery-slideShow-arrow-right{	
-	right:0px;
+	right:10px;
 }
 
 @-webkit-keyframes fadeIn {

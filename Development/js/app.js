@@ -22,6 +22,27 @@
 		$scope.isActive = MenuService.isActive;
 	}]);
 	
+	app.factory('LoadingProgress',function(){
+		var progress=0;
+		var LoadingProgress={
+			update:function(value){
+				if(value>100){
+					value=100;
+				}else if(value<0){
+					value=0;
+				}
+				progress=value;
+				console.log("update : "+progress);
+				$(".loading-bar>.loading-bar-progress").css("width",progress+"%");
+				$(".loading-bar>.loading-bar-num").html(progress+"%");
+			},
+			hideLoading:function(){
+				$(".loading").delay( 500 ).fadeOut("fast");
+			}
+		}
+		return LoadingProgress;
+	});
+	
 	app.directive('comContainer',function($compile) {
 		return {
 			restrict: 'E',
@@ -50,12 +71,49 @@
 			}
 		};
 	});
-	
-	app.directive('comHome',function(){
+	var comHomeScreenTimeout=null;
+	app.directive('comHome',function($compile){
 		return{
 			restrict: 'E',
 			templateUrl:'directives/comHome.html',
-			controller: function($scope,$element,$http,$interval) {
+			controller: function($scope,$element,$http,LoadingProgress,$compile) {
+				$scope.featuredImages=[];
+				$http.get('images/featuredImages.json?'+new Date())
+				.then(function(result){
+					$scope.featuredImages=result.data;
+					if($scope.featuredImages.length>0){
+						loadFeaturedImage(0);
+					}
+				});
+
+				var loadFeaturedImage=function(index){
+					LoadingProgress.update(Math.floor(100*(index)/$scope.featuredImages.length));
+					if(index>=$scope.featuredImages.length||index<0){
+						LoadingProgress.hideLoading();
+						//comHomeScreenTimeout=setTimeout(featuredImageLooping,5000);
+						return;
+					}
+					var image = $( new Image() ).load(function( event ) {
+									var backgroundImageStyle="background-image:url("+$scope.featuredImages[index]+")";
+									var screenItem=$compile("<div ng-class=\""+"$index==featuredImageIndex?'in':'out'"+"\" class=\'com-home-screen-item\' style=\'"+backgroundImageStyle+"\'></div>");
+									$element.find(".com-home-screen").append(screenItem);
+									loadFeaturedImage(++index);
+								}).error(function( event ) {
+									console.log(event);
+								}).prop( "src", $scope.featuredImages[index]);
+					
+				}
+				$scope.featuredImageIndex=0;
+				/* var featuredImageLooping=function(){
+					$element.find(".com-home-screen-item").eq(featuredImageIndex).removeClass("out").addClass("in");
+					featuredImageIndex++;
+					if(nextIndex>=$scope.featuredImages.length){
+						nextIndex=0
+					}
+					$element.find(".com-home-screen-item").eq(nextIndex).next().removeClass("out").addClass("in");
+					comHomeScreenTimeout=setTimeout(featuredImageLooping,5000);
+				} */
+				
 				var fullScreen=function(element) {
 							if(element.requestFullScreen) {
 								element.requestFullScreen();
@@ -87,30 +145,24 @@
 					$scope.gallery=result.data;
 				});
 				var timer = 0;
-				var updateTimeInterval=null;
-				var swithImageTimeOut=null;
+				$scope.updateTimeInterval=null;
+				$scope.switchImageTimeOut=null;
 				$scope.curImageIndex=0;
 				$scope.slideShowEnable=false;
 				$scope.slideShow=function(index){
 					timer=0;
 					$scope.slideShowEnable=true;
 					$scope.changeFullImage(index);
-					updateTimeInterval=setInterval(updateTimer, 1000);
 				}
 				$scope.autoSlide=true;
 				$scope.slideHide=function(){
-					timer=0;
 					$scope.slideShowEnable=false;
-					if(updateTimeInterval){
-						clearInterval(updateTimeInterval);
-					}
-					if(swithImageTimeOut){
-						clearTimeout(swithImageTimeOut);
-					}
-					$element.find(".gallery-slideShow-fullImage.in").attr("src","");
-					$element.find(".gallery-slideShow-fullImage.out").attr("src","");
+					clearTimer();
+					$element.find(".gallery-slideShow-fullImage.in").css("background-image","none");
+					$element.find(".gallery-slideShow-fullImage.out").css("background-image","none");
 				}
 				$scope.changeFullImage=function(index){
+					clearTimer();
 					console.log(index);
 					console.log($element.find(".gallery-slideShow-loading"));
 					$element.find(".gallery-slideShow-loading").removeClass("hide");
@@ -125,16 +177,25 @@
 									console.log(event);
 									console.log(image);
 									$element.find(".gallery-slideShow-loading").addClass("hide");
-									switchFullImage();
-									
+									switchFullImage();								
 									if($scope.autoSlide){
+										$scope.updateTimeInterval=setInterval(updateTimer, 1000);
 										autoSlideNext(++index);
 									} 
 								}).error(function( event ) {
 									console.log(event);
 								}).prop( "src", $scope.fullImageCur );
 				}
-				
+				var clearTimer=function(){
+					console.log("clearTimer");
+					timer=0;
+					if($scope.updateTimeInterval){
+						clearInterval($scope.updateTimeInterval);
+					}
+					if($scope.switchImageTimeOut){
+						clearTimeout($scope.switchImageTimeOut);
+					}
+				}
 				var updateTimer=function(){
 					timer++;
 					console.log(timer);
@@ -156,7 +217,7 @@
 											switchFullImage();
 											autoSlideNext(++index);
 										}else{
-											swithImageTimeOut=setTimeout(function(){
+											$scope.switchImageTimeOut=setTimeout(function(){
 												console.log("TimeOut");
 												switchFullImage();
 												autoSlideNext(++index);
@@ -172,19 +233,17 @@
 					var imageIn=$element.find(".gallery-slideShow-fullImage.in")
 					var imageOut=$element.find(".gallery-slideShow-fullImage.out");
 									
-					imageOut.attr("src",$scope.fullImageCur);
-					imageOut.attr("src",$scope.fullImageCur).removeClass("out").addClass("in");
+					imageOut.css("background-image","url('"+$scope.fullImageCur+"')").removeClass("out").addClass("in");
 					imageIn.removeClass("in").addClass("out");
 					timer=0;
 				}
 				
 				$scope.toggleAutoSlide=function(){
 					$scope.autoSlide=!$scope.autoSlide;
-					if(swithImageTimeOut){
-						clearTimeout(swithImageTimeOut);
-					}
 					
+					clearTimer();
 					if($scope.autoSlide){
+						$scope.updateTimeInterval=setInterval(updateTimer, 1000);
 						autoSlideNext(($scope.curImageIndex+1));
 					}else{
 						
