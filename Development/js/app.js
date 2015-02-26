@@ -1,30 +1,9 @@
 (function(){
 	var app = angular.module('iwenStudio', [ ]);	
 
-	
-	app.factory('MenuService',function(){
-		var curComponentIndex = 'home';
-		var MenuService = {
-			getComponentIndex:function(){
-				return curComponentIndex;
-			},
-			changeComponents:function(index){
-				curComponentIndex = index;
-			},
-			isActive:function(index){
-				return index==curComponentIndex;
-			}
-		}
-		return MenuService;
-	});
-	app.controller('TopMenuController',['$scope','MenuService',function($scope,MenuService){
-		$scope.changeComponents = MenuService.changeComponents;
-		$scope.isActive = MenuService.isActive;
-	}]);
-	
-	app.factory('LoadingProgress',function(){
+	app.factory('LoadingService',function(){
 		var progress=0;
-		var LoadingProgress={
+		var LoadingService={
 			update:function(value){
 				if(value>100){
 					value=100;
@@ -40,8 +19,60 @@
 				$(".loading").delay( 500 ).fadeOut("fast");
 			}
 		}
-		return LoadingProgress;
+		return LoadingService;
 	});
+	
+	app.factory('TimerService',function($timeout,$interval){
+		var timeoutStack=[];
+		var intervalStack=[];
+		var TimerService={
+			pushTimeout:function(timeout){
+				timeoutStack.push(timeout);
+			},
+			pushInterval:function(interval){
+				intervalStack.push(interval);
+				console.log(intervalStack);
+			},
+			clearAllTimer:function(){
+				console.log("clearAllTimer");
+				for(var i=0;i<timeoutStack.length;i++){
+					if(timeoutStack[i]){
+						$timeout.cancel(timeoutStack[i]);
+					}
+				}
+				for(var i=0;i<intervalStack.length;i++){
+					if(intervalStack[i]){
+						console.log(intervalStack[i]);
+						$interval.cancel(intervalStack[i]);
+					}
+				}
+			}
+		}
+		return TimerService;
+	});
+	
+	app.factory('MenuService',function(TimerService){
+		var curComponentIndex = 'home';
+		var MenuService = {
+			getComponentIndex:function(){
+				return curComponentIndex;
+			},
+			changeComponents:function(index){
+				curComponentIndex = index;
+				TimerService.clearAllTimer();
+			},
+			isActive:function(index){
+				return index==curComponentIndex;
+			}
+		}
+		return MenuService;
+	});
+	app.controller('TopMenuController',['$scope','MenuService',function($scope,MenuService){
+		$scope.changeComponents = MenuService.changeComponents;
+		$scope.isActive = MenuService.isActive;
+	}]);
+	
+	
 	
 	app.directive('comContainer',function($compile) {
 		return {
@@ -57,7 +88,6 @@
                     function( newValue ) {
 						var html="";
 						if(/^gallery-/i.test(newValue)){
-							console.log(newValue);
 							var galleryId=newValue.substring(8,newValue.length);
 							console.log(galleryId);
 							html="<com-gallery  data-gallery-id='"+galleryId+"'></com-gallery>";
@@ -71,12 +101,13 @@
 			}
 		};
 	});
-	var comHomeScreenTimeout=null;
+
 	app.directive('comHome',function($compile){
 		return{
 			restrict: 'E',
 			templateUrl:'directives/comHome.html',
-			controller: function($scope,$element,$http,LoadingProgress,$compile) {
+			controller: function($scope,$element,$http,$timeout,LoadingService) {
+				$scope.loopingTimeout=null;
 				$scope.featuredImages=[];
 				$http.get('images/featuredImages.json?'+new Date())
 				.then(function(result){
@@ -85,34 +116,50 @@
 						loadFeaturedImage(0);
 					}
 				});
-
 				var loadFeaturedImage=function(index){
-					LoadingProgress.update(Math.floor(100*(index)/$scope.featuredImages.length));
+					LoadingService.update(Math.floor(100*(index)/$scope.featuredImages.length));
 					if(index>=$scope.featuredImages.length||index<0){
-						LoadingProgress.hideLoading();
-						//comHomeScreenTimeout=setTimeout(featuredImageLooping,5000);
+						LoadingService.hideLoading();
+						$scope.loopingTimeout=$timeout(featuredImageLooping,5000);
 						return;
 					}
 					var image = $( new Image() ).load(function( event ) {
 									var backgroundImageStyle="background-image:url("+$scope.featuredImages[index]+")";
-									var screenItem=$compile("<div ng-class=\""+"$index==featuredImageIndex?'in':'out'"+"\" class=\'com-home-screen-item\' style=\'"+backgroundImageStyle+"\'></div>");
-									$element.find(".com-home-screen").append(screenItem);
+									var screenItem="<div ng-class=\""+"featuredImageIndex=="+index+"?'active':''"+"\" class=\'com-home-screen-item\' style=\'"+backgroundImageStyle+"\'></div>";
+									$element.find(".com-home-screen").append($compile(screenItem)( $scope ));
 									loadFeaturedImage(++index);
 								}).error(function( event ) {
-									console.log(event);
 								}).prop( "src", $scope.featuredImages[index]);
 					
 				}
 				$scope.featuredImageIndex=0;
-				/* var featuredImageLooping=function(){
-					$element.find(".com-home-screen-item").eq(featuredImageIndex).removeClass("out").addClass("in");
-					featuredImageIndex++;
-					if(nextIndex>=$scope.featuredImages.length){
-						nextIndex=0
+				 var featuredImageLooping=function(){
+					console.log("featuredImageIndex : "+$scope.featuredImageIndex);
+					$scope.featuredImageIndex+=1;
+					if($scope.featuredImageIndex>=$scope.featuredImages.length){
+						$scope.featuredImageIndex=0;
 					}
-					$element.find(".com-home-screen-item").eq(nextIndex).next().removeClass("out").addClass("in");
-					comHomeScreenTimeout=setTimeout(featuredImageLooping,5000);
-				} */
+					$scope.loopingTimeout=$timeout(featuredImageLooping,5000);
+				}
+				
+
+
+				$scope.certIndex=0;
+				
+				$scope.nextCert=function(){
+					$scope.certIndex++;
+					if($scope.certIndex>=3)
+					{
+						$scope.certIndex=2;
+					}
+				}
+				$scope.preCert=function(){
+					$scope.certIndex--;
+					if($scope.certIndex<0)
+					{
+						$scope.certIndex=0;
+					}
+				}
 				
 				var fullScreen=function(element) {
 							if(element.requestFullScreen) {
@@ -126,6 +173,10 @@
 				$scope.launchFullScreen=function(){
 					fullScreen(document.documentElement);
 				};
+				
+				$element.on('$destroy', function() {
+					$timeout.cancel($scope.loopingTimeout);
+				});
 			}
 		};
 	});
@@ -135,7 +186,7 @@
 			scope: {
 				galleryId:'@galleryId'
 			},
-			controller: function($scope,$element,$http,$interval) {
+			controller: function($scope,$element,$http,$interval,$timeout,TimerService) {
 				console.log($scope.galleryId);
 				$scope.galleryId="test";
 				$scope.gallery=[];
@@ -154,7 +205,7 @@
 					$scope.slideShowEnable=true;
 					$scope.changeFullImage(index);
 				}
-				$scope.autoSlide=true;
+				$scope.autoSlide=false;
 				$scope.slideHide=function(){
 					$scope.slideShowEnable=false;
 					clearTimer();
@@ -162,9 +213,7 @@
 					$element.find(".gallery-slideShow-fullImage.out").css("background-image","none");
 				}
 				$scope.changeFullImage=function(index){
-					clearTimer();
-					console.log(index);
-					console.log($element.find(".gallery-slideShow-loading"));
+					clearTimer();					
 					$element.find(".gallery-slideShow-loading").removeClass("hide");
 					if(index>=$scope.gallery.length){
 						index=0;
@@ -174,26 +223,28 @@
 					$scope.curImageIndex = index;
 					$scope.fullImageCur=$scope.gallery[index].fullImage;
 					var image = $( new Image() ).load(function( event ) {
-									console.log(event);
-									console.log(image);
 									$element.find(".gallery-slideShow-loading").addClass("hide");
-									switchFullImage();								
+									switchFullImage($scope.curImageIndex,$scope.fullImageCur);								
 									if($scope.autoSlide){
-										$scope.updateTimeInterval=setInterval(updateTimer, 1000);
-										autoSlideNext(++index);
+										clearTimer();
+										$scope.updateTimeInterval=$interval(updateTimer, 1000);
+										
+										autoSlideNext( ($scope.curImageIndex+1) );
 									} 
 								}).error(function( event ) {
 									console.log(event);
 								}).prop( "src", $scope.fullImageCur );
 				}
+				$scope.updateTimeInterval = null;
+				$scope.switchImageTimeOut = null;
 				var clearTimer=function(){
 					console.log("clearTimer");
 					timer=0;
 					if($scope.updateTimeInterval){
-						clearInterval($scope.updateTimeInterval);
+						$interval.cancel($scope.updateTimeInterval);
 					}
 					if($scope.switchImageTimeOut){
-						clearTimeout($scope.switchImageTimeOut);
+						$timeout.cancel($scope.switchImageTimeOut);
 					}
 				}
 				var updateTimer=function(){
@@ -209,41 +260,43 @@
 					}else if(index<0){
 						index = $scope.gallery.length-1;
 					}
-					$scope.curImageIndex = index;
-					$scope.fullImageCur=$scope.gallery[index].fullImage;
+					var nextIndex = index;
+					var nextfullImageCur=$scope.gallery[index].fullImage;
 					var image = $( new Image() ).load(function( event ) {
 									if($scope.autoSlide){
 										if(timer>=autoSlideInterval){
-											switchFullImage();
+											switchFullImage(nextIndex,nextfullImageCur);
 											autoSlideNext(++index);
 										}else{
-											$scope.switchImageTimeOut=setTimeout(function(){
-												console.log("TimeOut");
-												switchFullImage();
+											$scope.switchImageTimeOut=$timeout(function(){
+												console.log("switchFullImage");
+												switchFullImage(nextIndex,nextfullImageCur);
 												autoSlideNext(++index);
-											},1000*(autoSlideInterval - timer))
+											},1000*(autoSlideInterval - timer));
 										}
 									}
 								}).error(function( event ) {
 									console.log(event);
-								}).prop( "src", $scope.fullImageCur );
+								}).prop( "src", nextfullImageCur );
 				} 
-				
-				var switchFullImage=function(){
+
+				var switchFullImage=function(nextIndex,nextfullImageCur){
+					
 					var imageIn=$element.find(".gallery-slideShow-fullImage.in")
 					var imageOut=$element.find(".gallery-slideShow-fullImage.out");
 									
-					imageOut.css("background-image","url('"+$scope.fullImageCur+"')").removeClass("out").addClass("in");
+					imageOut.css("background-image","url('"+nextfullImageCur+"')").removeClass("out").addClass("in");
 					imageIn.removeClass("in").addClass("out");
 					timer=0;
+					$scope.curImageIndex=nextIndex;
+					$scope.fullImage=nextfullImageCur;	
 				}
 				
 				$scope.toggleAutoSlide=function(){
 					$scope.autoSlide=!$scope.autoSlide;
-					
 					clearTimer();
 					if($scope.autoSlide){
-						$scope.updateTimeInterval=setInterval(updateTimer, 1000);
+						$scope.updateTimeInterval=$interval(updateTimer, 1000);
 						autoSlideNext(($scope.curImageIndex+1));
 					}else{
 						
@@ -256,6 +309,10 @@
 				$scope.preFullImage=function(){
 					$scope.changeFullImage($scope.curImageIndex-1);
 				}
+				
+				$element.on('$destroy', function() {
+					clearTimer();
+				});
 			},
 			templateUrl:'directives/comGallery.html',
 		};

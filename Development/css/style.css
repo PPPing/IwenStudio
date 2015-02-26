@@ -205,18 +205,13 @@ background-image: linear-gradient(to bottom, rgb(224, 224, 224) 0%, rgb(255, 255
 	background-repeat:no-repeat;
 	background-size:cover;
 	opacity:0;
+	-webkit-transition: opacity 2s ease-in;
+	-moz-transition: opacity 2s ease-in;
+	-o-transition: opacity 2s ease-in;
+	transition: opacity 2s ease-in;
 }
-.com-home-screen-item.in{
-	-webkit-animation: fadeIn 4s 1 running 0 both;
-	-moz-animation: fadeIn 4s 1 running 0 both;
-	-o-animation: fadeIn 4s 1 running 0 both;
-	animation:fadeIn 4s 1 running 0 both;
-}
-.com-home-screen-item.out{
-	-webkit-animation: fadeOut 4s 1 running 0 both;
-	-moz-animation: fadeOut 4s 1 running 0 both;
-	-o-animation: fadeOut 4s 1 running 0 both;
-	animation:fadeOut 4s 1 running 0 both;
+.com-home-screen-item.active{
+	opacity:1;
 }
 
 .com-home-bottom{
@@ -226,6 +221,63 @@ background-image: linear-gradient(to bottom, rgb(224, 224, 224) 0%, rgb(255, 255
 	bottom:0;
 	background-color:#fff;
 	color: #6F6F6F;
+}
+.com-home-cert{
+	position:relative;
+	width:120px;
+	height:40px;
+	background-color:#ccc;
+	margin:10px auto 0 auto;
+}
+.com-home-cert-list{
+	position:relative;
+	width:100%;
+	height:100%;
+	overflow:hidden;
+}
+.com-home-cert-item{
+	position:absolute;
+	top:0;
+	left:0;
+	width:120px;
+	height:40px;
+	overflow:hidden;
+	display:inline-block;
+	-webkit-transition: -webkit-transform 0.3s ease-out;
+	-moz-transition: -moz-transform 0.3s ease-out;
+	-o-transition: -o-transform 0.3s ease-out;
+	transition: transform 0.3s ease-out;
+}
+.com-home-cert-item-left{
+	-webkit-transform: translateX(-120px);
+	-moz-transform:  translateX(-120px);
+	-o-transform:  translateX(-120px);
+	-ms-transform: translateX(-120px);
+	transform:  translateX(-120px);
+}
+.com-home-cert-item-right{
+	-webkit-transform: translateX(120px);
+	-moz-transform:  translateX(120px);
+	-o-transform:  translateX(120px);
+	-ms-transform: translateX(120px);
+	transform:  translateX(120px);
+}
+.com-home-cert-item  img{
+	width:100%;
+}
+.com-home-cert-arrow{
+	position:absolute;
+	top:13%;
+	text-align:center;
+	font-size:25px;	
+	color:#222;
+	line-height:1px;
+}
+.com-home-cert-arrow-left{	
+	left:-38px;
+}
+.com-home-cert-arrow-right{	
+	right:-38px;
 }
 /*
 **** about ******
@@ -378,7 +430,7 @@ cursor:pointer;
 	position:absolute;
 	top:45%;
 	text-align:center;
-	font-size:30px;	
+	font-size:40px;	
 	color:#E5E5E5;
 }
 .gallery-slideShow-arrow-left{	
