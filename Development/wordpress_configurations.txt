@@ -1,0 +1,17 @@
+/*** mysql config ***/
+/mysql -u root
+
+mysql> set password for 'root'@'localhost' = PASSWORD('root1qaz2wsx');
+
+mysql> create database if not exists `iwen_wp`;
+
+mysql> create user 'iwen' identified by 'iwen!@#';
+
+mysql> grant all privileges on iwen_wp.* TO 'iwen'@'localhost' identified by 'iwen!@#';
+
+mysql> flush privileges;
+
+mysql> exit
+
+/*** wordpress ***/
+admin account  test/test!@#
