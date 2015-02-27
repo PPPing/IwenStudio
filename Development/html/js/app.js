@@ -47,7 +47,7 @@
 	});
 	
 	app.factory('BackgroundMusicService',function(LoadingService){
-		var playList=["music/1.mp3","music/2.mp3"];
+		var playList=["music/more_than_words.mp3","music/love_me_tender.mp3","music/The_Fire_In_Your_Eyes.mp3"];
 		var curIndex=0;
 		var playSound='';
 		var playNext=function(playList,index){
@@ -116,8 +116,10 @@
 			controller:function($scope,$element,$http,BackgroundMusicService,LoadingService) {
 				$scope.togglePause=BackgroundMusicService.togglePause;
 				$scope.isPlaying=BackgroundMusicService.isPlaying;
-				LoadingService.pushLoadedCallback(BackgroundMusicService.play);
-				BackgroundMusicService.init();				
+				//LoadingService.pushLoadedCallback(BackgroundMusicService.play);
+				if(!BackgroundMusicService.isPlaying()){
+					BackgroundMusicService.init();				
+				}				
 			},
 			templateUrl:'directives/modBackgroundMusic.html',
 		};
@@ -458,6 +460,15 @@
 	app.directive('comCinematography',function(){
 		return{
 			restrict: 'E',
+			controller: function($scope,$http,$element) {			
+				$scope.cinemaList=[];
+				$http.get('images/cinemaList.json?'+new Date())
+				.then(function(result) {
+					console.log(result);
+					$scope.cinemaList=result.data;
+					$element.find(".com-cinema-list").css("width",322*$scope.cinemaList.length+'%');
+				});
+			},
 			templateUrl:'directives/comCinematography.html',
 		};
 	});

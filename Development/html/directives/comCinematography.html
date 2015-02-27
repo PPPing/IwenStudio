@@ -1,1 +1,17 @@
-Cinematography
+<div class="container com-cinema">
+	<ul class="com-cinema-list">
+		<li ng-repeat="item in cinemaList" class="com-cinema-item">
+			<a ng-href="{{item.url}}" target="_bank"><img height="100%" ng-src="{{item.image}}"></a>
+			<div class="com-cinema-item-light">
+			</div>
+		</li>		
+	</ul>
+	<div ng-show="true" class="com-cinema-arrow com-cinema-arrow-left" ng-click="preFullImage()">
+			<span class="glyphicon glyphicon-menu-left"></span>
+	</div>
+	<div  ng-show="true" class="com-cinema-arrow com-cinema-arrow-right" ng-click="nextFullImage()">
+		<span class="glyphicon glyphicon-menu-right"></span>
+	</div>
+	
+</div>
+
