@@ -13,7 +13,7 @@
 	<link rel="stylesheet" type="text/css" href="./css/style.css" />
 	</head>
 	<body>
-		<div class="loading">
+		<div class="loading" >
 			<div class="landing-up">
 				<div class="logo">IWEN Studio</div>
 				<div class="loading-bar">
@@ -21,12 +21,16 @@
 					<div class="loading-bar-num">0%</div>
 				</div>
 			</div>
-			<div class="landing-down"></div>
-			<div class="copyright">Website Design by Ping | © iwenphotography.com All rights reserved.</div>
+			<div class="landing-down">
+			<div class="loading-footer">
+				<div class="copyright">Website Design by Ping | ©iwenphotography.com All rights reserved.</div>
+			</div>
+			</div>			
 		</div>
-		<div class="header">
-			<ul class="top-menu" ng-controller="TopMenuController as top">
-				<li class=" top-menu-item" ng-class="isActive('home')?'active':''" ng-click="changeComponents('home')">
+		<div class="header">			
+			<ul class="top-menu" ng-class="mobileMenuEnable?'top-menu-enable':''" ng-controller="TopMenuController as top">
+				<li class="mobile-menu-trigger" ng-class="!isActive('home')?'mobile-menu-trigger-dark':''"  ng-click="toggleMenu()"><span class="glyphicon glyphicon-menu-hamburger"></span></li>
+				<li class=" top-menu-item" ng-class="isActive('home')?'active-home':''" ng-click="changeComponents('home')">
 					<div class="top-menu-item-text">HOME</div>
 					<div class="top-menu-item-underline"></div>
 				</li>
@@ -48,8 +52,9 @@
 					<div class="top-menu-item-text">CREATE-ART</div>
 					<div class="top-menu-item-underline"></div>
 				</li>
-				<li class=" top-menu-item">
-					<div class="top-menu-item-logo">LOGO</div>
+				<li class="top-menu-item destop-only">
+					<!-- <a href="http://localhost/GitHub/IwenStudio/Development/html/" class="top-menu-item-logo">LOGO</a>-->
+					<div class="top-menu-item-logo"><a>LOGO</a></div>
 				</li>
 				<li class=" top-menu-item" ng-class="isActive('cinematography')?'active':''" ng-click="changeComponents('cinematography')">
 					<div class="top-menu-item-text">CINEMATOGRAPHY</div>
@@ -75,74 +80,15 @@
 				</li>
 			</ul>
 		</div>
-		<!-- <com-test data-edit-mode=false></com-test> -->
-		<com-container ></com-container> 
-		
-		<div class="container" style="display:none">
-			<div class="com-home" style="display:none">
-				<div class="com-home-screen">
-				</div>
-				<div class="com-home-bottom">
-					<div class=""></div>
-					<div class="copyright">Website Design by Ping | Copyright © iwenphotography.com All rights reserved.</div>
-				</div>
-			</div>
-			<!-- <div class="gallery">
-			</div>
-			<div class="cinema">
-			</div>-->
-			<div class="com-about" style="display:none">
-				<div class="com-about-photo">
-					<img height=150 width=150 src="images/摄影师IWEN.JPG" 
-							class="com-about-photo-image" title="Iwen" >
-					<div class="com-about-photo-discription">
-						Photographer Iwen
-					</div>
-				</div>
-				<div class="com-about-details-en">
-					adfasdfsdfaefawef asdfasdfawefadsfafa<br>
-					adfasdfsdfaefawef asdfasdfawefads fafa aadfadfaaf adfasdf<br>
-					adfasdfsdfaefawef asdfasdfawefads fafa aadfadfaaf adfasdfa dfadfas<br>
-					adfasdfsdfaefawef asdfasdfawefads fafa aadfadfaaf adfasdfa dfadfasadfa  asdfaf asdfadf adf<br>
-					adfasdfsdfaefawef asdfasdfawefads fafa aadfadfaaf adfasdfadfasf asdfasdf asdf<br>
-					adfasdfsdfaefawef asdfasdfawefadsfafa<br>
-					adfasdfsdfaefawef asdfasdfawefads fafa aadfadfaaf adfasdfa dfadfas<br>
-					adfasdfsdfaefawef asdfasdfawefads fafa aadfadfaaf adfasdfa dfadfasadfa  asdfa<br>
-					adfasdfsdfaefawef asdfasdfawefads fafa aadfadfaaf adfasdf<br>
-				</div>
-				<div class="com-about-details-zh">
-				在满足客户需求的前提下，接力从多视角，以多风格，
-				</div>
-				<div class="copyright">Website Design by Ping | Copyright © iwenphotography.com All rights reserved.</div>
-			</div>
-			<div class="com-contact" style="display:none">
-				<div class="com-contact-info">
-					<span class="com-contact-info-section">
-						<div class="com-contact-info-title">Contact</div>
-						<div class="com-contact-info-item"><span class="glyphicon glyphicon-phone"></span> Tel: +86 13920746631</div>
-						<div class="com-contact-info-item"><span class="glyphicon glyphicon-envelope"></span> Email: 286186519@qq.com</div>
-						<div class="com-contact-info-item"><span class="glyphicon glyphicon-camera"></span> Weibo: weibo.com/iwenvision</div>
-						<div class="com-contact-info-item"><span class="glyphicon glyphicon-tree-deciduous"></span> Wechat: iwen286186519</div>
-					</span><span class="com-contact-info-section">
-						<span class="com-about-info-image-wechat"></span>
-						<span class="com-about-info-image-weibo"></span>	
-					</span>
-				</div>
-				
-				<div class="com-contact-thx">
-				Thank you!
-				</div>
-				
-			</div>
-		</div>
+		<com-container ></com-container> 			
 	</body>
 	<style>
 	</style>
 	<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="js/soundmanager2.js"></script>
 	<script type="text/javascript" src="js/angular.min.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
-	<script>
-		
+	<script>		
 	</script>
 </html>
 

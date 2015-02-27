@@ -3,31 +3,7 @@
 
 	</div>
 	<div class="com-home-bottom">
-		<div class="com-home-cert">
-			<div class="com-home-cert-list">
-				<div class="com-home-cert-item " ng-class="{'com-home-cert-item-left' : certIndex>0, 'com-home-cert-item-right' : certIndex<0}">
-					<a href="http://weibo.com/iwenvision" target="_self" ><img  src="http://vincestudio.net/wp-content/uploads/2014/07/DSC_6507-150x100.jpg"></a>
-				</div>
-				<div class="com-home-cert-item" ng-class="{'com-home-cert-item-left' : certIndex>1, 'com-home-cert-item-right' : certIndex<1}">
-					<a href="http://weibo.com/iwenvision" target="_self" ><img  src="http://vincestudio.net/wp-content/uploads/2014/07/DSC_6456-150x100.jpg"></a>
-				</div>
-				<div class="com-home-cert-item" ng-class="{'com-home-cert-item-left' : certIndex>2, 'com-home-cert-item-right' : certIndex<2}">
-					<a href="http://weibo.com/iwenvision" target="_self" ><img  src="http://vincestudio.net/wp-content/uploads/2014/07/DSC_6372-150x100.jpg"></a>
-				</div>
-			</div>
-			<div class="com-home-cert-arrow com-home-cert-arrow-left" ng-click="preCert()">
-				<span class="glyphicon glyphicon-triangle-left"></span>
-			</div>
-			<div  class="com-home-cert-arrow com-home-cert-arrow-right" ng-click="nextCert()">
-				<span class="glyphicon glyphicon-triangle-right"></span>
-			</div>
-		</div>
-		<div class="right-bottom">
-		<div class="right-bottom-actions">
-			<span class="glyphicon glyphicon-fullscreen" ng-click="launchFullScreen()"></span>
-			<span class="glyphicon glyphicon-volume-off"></span>
-		</div>
-		<div class="copyright">Website Design by Ping | ©iwenphotography.com All rights reserved.</div>
-		</div>
+		<mod-cert-list></mod-cert-list>
+		<mod-footer></mod-footer>	
 	</div>
 </div>

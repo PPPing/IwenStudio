@@ -3,23 +3,124 @@
 
 	app.factory('LoadingService',function(){
 		var progress=0;
-		var LoadingService={
-			update:function(value){
-				if(value>100){
-					value=100;
-				}else if(value<0){
-					value=0;
+		var loadedCallbacks=[];
+		var updateProgress=function(value){
+			if(value>100){
+				value=100;
+			}else if(value<0){
+				value=0;
+			}
+			progress=value;
+			console.log("updateProgress : "+progress);
+			if(progress>=100){
+				finishLoading();
+			}
+			$(".loading-bar>.loading-bar-progress").css("width",progress+"%");
+			$(".loading-bar>.loading-bar-num").html(progress+"%");
+		}
+		var finishLoading=function(){
+			for(var i=0;i<loadedCallbacks.length;i++){
+				if(loadedCallbacks[i]){
+					loadedCallbacks[i]();
 				}
-				progress=value;
-				console.log("update : "+progress);
-				$(".loading-bar>.loading-bar-progress").css("width",progress+"%");
-				$(".loading-bar>.loading-bar-num").html(progress+"%");
+			}
+			$(".loading").delay( 500 ).fadeOut("fast");
+		}
+		var LoadingService={
+			//Total: 100 FeaturedImage:80 BGM:20
+			addProgress:function(value){
+				updateProgress(progress+value);
 			},
-			hideLoading:function(){
-				$(".loading").delay( 500 ).fadeOut("fast");
+			getProgress:function(){
+				return progress;
+			},
+			pushLoadedCallback:function(callback){
+				loadedCallbacks.push(callback);
+				console.log(loadedCallbacks);
+			},
+			weights:{
+				FeaturedImage:80,
+				Bgm:20
 			}
 		}
 		return LoadingService;
+	});
+	
+	app.factory('BackgroundMusicService',function(LoadingService){
+		var playList=["music/1.mp3","music/2.mp3"];
+		var curIndex=0;
+		var playSound='';
+		var playNext=function(playList,index){
+				if(index>=playList.length){
+					index=0;
+				}
+				curIndex=index;
+				playSound = soundManager.createSound({
+					url: playList[index]
+				});
+				playSound.play({
+					onfinish: function(){
+						playNext(playList,index+1);
+					}
+				});
+			}
+		var preNext=function(playList,index){
+				if(index>=playList.length){
+					index=0;
+				}
+				curIndex=index;
+				playSound = soundManager.createSound({
+					url: playList[index]
+				});
+			}
+		var BackgroundMusicService = {
+			init:function(){
+				soundManager.setup({
+					preferFlash: false,
+					onready: function() {
+						preNext(playList,curIndex);
+						LoadingService.addProgress(LoadingService.weights.Bgm);
+					}
+				});
+			},
+			play:function(){
+				console.log("play");
+				playSound.play({
+					onfinish: function(){
+						playNext(playList,index+1);
+					}
+				});
+			},
+			stop:function(){
+				soundManager.stopAll();
+				isPlaying=false;
+			},
+			togglePause:function(){
+				soundManager.togglePause(playSound.id);
+				console.log(playSound);
+			},
+			isPlaying:function(){
+				if(!playSound||playSound==''){
+					return false;
+				}
+				return playSound.playState==1&&!playSound.paused;
+			}
+		}
+		return BackgroundMusicService;
+	});	
+	
+	app.directive('modBackgroundMusic',function($compile) {
+		return {
+			restrict: 'E',
+			scope: {},
+			controller:function($scope,$element,$http,BackgroundMusicService,LoadingService) {
+				$scope.togglePause=BackgroundMusicService.togglePause;
+				$scope.isPlaying=BackgroundMusicService.isPlaying;
+				LoadingService.pushLoadedCallback(BackgroundMusicService.play);
+				BackgroundMusicService.init();				
+			},
+			templateUrl:'directives/modBackgroundMusic.html',
+		};
 	});
 	
 	app.factory('TimerService',function($timeout,$interval){
@@ -67,12 +168,17 @@
 		}
 		return MenuService;
 	});
-	app.controller('TopMenuController',['$scope','MenuService',function($scope,MenuService){
-		$scope.changeComponents = MenuService.changeComponents;
+	app.controller('TopMenuController',['$scope','MenuService','$element',function($scope,MenuService){		
+		$scope.mobileMenuEnable=false;
+		$scope.toggleMenu=function(){
+			$scope.mobileMenuEnable = !$scope.mobileMenuEnable;
+		}
 		$scope.isActive = MenuService.isActive;
-	}]);
-	
-	
+		$scope.changeComponents = function(index){
+				MenuService.changeComponents(index);
+				$scope.mobileMenuEnable=false;
+		}
+	}]);	
 	
 	app.directive('comContainer',function($compile) {
 		return {
@@ -101,7 +207,7 @@
 			}
 		};
 	});
-
+	
 	app.directive('comHome',function($compile){
 		return{
 			restrict: 'E',
@@ -116,13 +222,13 @@
 						loadFeaturedImage(0);
 					}
 				});
+				
 				var loadFeaturedImage=function(index){
-					LoadingService.update(Math.floor(100*(index)/$scope.featuredImages.length));
 					if(index>=$scope.featuredImages.length||index<0){
-						LoadingService.hideLoading();
 						$scope.loopingTimeout=$timeout(featuredImageLooping,5000);
 						return;
 					}
+					LoadingService.addProgress(Math.ceil(LoadingService.weights.FeaturedImage/$scope.featuredImages.length));
 					var image = $( new Image() ).load(function( event ) {
 									var backgroundImageStyle="background-image:url("+$scope.featuredImages[index]+")";
 									var screenItem="<div ng-class=\""+"featuredImageIndex=="+index+"?'active':''"+"\" class=\'com-home-screen-item\' style=\'"+backgroundImageStyle+"\'></div>";
@@ -134,18 +240,26 @@
 				}
 				$scope.featuredImageIndex=0;
 				 var featuredImageLooping=function(){
-					console.log("featuredImageIndex : "+$scope.featuredImageIndex);
 					$scope.featuredImageIndex+=1;
 					if($scope.featuredImageIndex>=$scope.featuredImages.length){
 						$scope.featuredImageIndex=0;
 					}
 					$scope.loopingTimeout=$timeout(featuredImageLooping,5000);
 				}
-				
 
-
-				$scope.certIndex=0;
-				
+				$element.on('$destroy', function() {
+					$timeout.cancel($scope.loopingTimeout);
+				});
+			}
+		};
+	});
+	
+	app.directive('modCertList',function($compile){
+		return {
+			restrict: 'E',
+			scope: {},
+			controller:function($scope,$element,$http) {
+				$scope.certIndex=0;				
 				$scope.nextCert=function(){
 					$scope.certIndex++;
 					if($scope.certIndex>=3)
@@ -160,6 +274,23 @@
 						$scope.certIndex=0;
 					}
 				}
+				$scope.certList=[];
+				$http.get('images/certList.json?'+new Date())
+				.then(function(result){
+					$scope.certList=result.data;
+				});										
+			},
+			templateUrl:'directives/modCertList.html',
+		};
+	});
+	
+	app.directive('modFooter',function($compile) {
+		return {
+			restrict: 'E',
+			scope: {},
+			replace:true,
+			controller:function($scope,$element,$http,MenuService) {
+				$scope.isGalleryMode
 				
 				var fullScreen=function(element) {
 							if(element.requestFullScreen) {
@@ -173,13 +304,11 @@
 				$scope.launchFullScreen=function(){
 					fullScreen(document.documentElement);
 				};
-				
-				$element.on('$destroy', function() {
-					$timeout.cancel($scope.loopingTimeout);
-				});
-			}
+			},
+			templateUrl:'directives/modFooter.html',
 		};
 	});
+	
 	app.directive('comGallery',function(){
 		return{
 			restrict: 'E',
@@ -279,7 +408,6 @@
 									console.log(event);
 								}).prop( "src", nextfullImageCur );
 				} 
-
 				var switchFullImage=function(nextIndex,nextfullImageCur){
 					
 					var imageIn=$element.find(".gallery-slideShow-fullImage.in")
@@ -290,8 +418,7 @@
 					timer=0;
 					$scope.curImageIndex=nextIndex;
 					$scope.fullImage=nextfullImageCur;	
-				}
-				
+				}				
 				$scope.toggleAutoSlide=function(){
 					$scope.autoSlide=!$scope.autoSlide;
 					clearTimer();
@@ -301,8 +428,7 @@
 					}else{
 						
 					}
-				}
-				
+				}	
 				$scope.nextFullImage=function(){
 					$scope.changeFullImage($scope.curImageIndex+1);
 				}
