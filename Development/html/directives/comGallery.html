@@ -18,10 +18,10 @@
 		<span class="glyphicon glyphicon-remove" ></span>
 		Close
 	</div>
-	<div  ng-show="!autoSlide" class="gallery-slideShow-arrow gallery-slideShow-arrow-left" ng-click="preFullImage()">
+	<div  ng-show="!autoSlide" class="gallery-slideShow-arrow gallery-slideShow-arrow-left" ng-click="preFullImage()" ng-swipe-left="preFullImage()">
 		<span class="glyphicon glyphicon-menu-left"></span>
 	</div>
-	<div  ng-show="!autoSlide" class="gallery-slideShow-arrow gallery-slideShow-arrow-right" ng-click="nextFullImage()">
+	<div  ng-show="!autoSlide" class="gallery-slideShow-arrow gallery-slideShow-arrow-right" ng-click="nextFullImage()" ng-swipe-right="nextFullImage()">
 		<span class="glyphicon glyphicon-menu-right"></span>
 	</div>	
 	<mod-footer></mod-footer>

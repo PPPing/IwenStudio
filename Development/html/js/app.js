@@ -1,5 +1,5 @@
 (function(){
-	var app = angular.module('iwenStudio', [ ]);	
+	var app = angular.module('iwenStudio', []);	
 
 	app.factory('LoadingService',function(){
 		var progress=0;
@@ -460,14 +460,65 @@
 	app.directive('comCinematography',function(){
 		return{
 			restrict: 'E',
-			controller: function($scope,$http,$element) {			
+			controller: function($scope,$http,$element,$window) {			
 				$scope.cinemaList=[];
+				var w = angular.element($window)
+				$scope.getWindowWidth=function(){	
+					return w.width();
+				}			
+				var windowWidth=$scope.getWindowWidth();
+				var maxWidth=windowWidth;
+				var maxOffset=0;
+				var delta=windowWidth*0.8;
+				console.log(maxWidth);
 				$http.get('images/cinemaList.json?'+new Date())
 				.then(function(result) {
 					console.log(result);
 					$scope.cinemaList=result.data;
-					$element.find(".com-cinema-list").css("width",322*$scope.cinemaList.length+'%');
+					updateWindow();
+					
 				});
+				var xOffset=0;
+				
+				function updateWindow(){
+					windowWidth=$scope.getWindowWidth();
+					maxWidth=321*$scope.cinemaList.length;
+					if(maxWidth<windowWidth){
+						maxWidth=windowWidth;
+					}
+					maxOffset=maxWidth-windowWidth;
+					delta=windowWidth*0.8;
+					if(windowWidth>=768){
+						$element.find(".com-cinema-list").css("width",maxWidth+'px');
+					}
+				}
+				$scope.$watch(
+                    function( $scope ) {
+                        return $scope.getWindowWidth();
+                    },
+                    function( newValue ) {
+						updateWindow();
+                    }
+                );	
+				$scope.preCinema=function(){
+					updateWindow();
+					xOffset-=800;
+					if(xOffset<0){
+						xOffset=0;
+					}
+					console.log(xOffset);
+					$element.find(".com-cinema-list").css("transform","translateX(-"+xOffset+"px)");
+					
+				}
+				$scope.nextCinema=function(){
+					updateWindow();
+					xOffset+=800;
+					if(xOffset>maxOffset){
+						xOffset=maxOffset;
+					}
+					console.log(xOffset);
+					$element.find(".com-cinema-list").css("transform","translateX(-"+xOffset+"px)");	
+				}
 			},
 			templateUrl:'directives/comCinematography.html',
 		};

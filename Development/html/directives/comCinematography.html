@@ -1,17 +1,15 @@
-<div class="container com-cinema">
+<div class="com-cinema">
 	<ul class="com-cinema-list">
 		<li ng-repeat="item in cinemaList" class="com-cinema-item">
-			<a ng-href="{{item.url}}" target="_bank"><img height="100%" ng-src="{{item.image}}"></a>
-			<div class="com-cinema-item-light">
-			</div>
+			<a ng-href="{{item.url}}" target="_bank"><img height="100%" ng-src="{{item.image}}"><div class="com-cinema-item-light"></div></a>		
 		</li>		
 	</ul>
-	<div ng-show="true" class="com-cinema-arrow com-cinema-arrow-left" ng-click="preFullImage()">
+	<div ng-show="true" class="com-cinema-arrow com-cinema-arrow-left" ng-click="preCinema()">
 			<span class="glyphicon glyphicon-menu-left"></span>
 	</div>
-	<div  ng-show="true" class="com-cinema-arrow com-cinema-arrow-right" ng-click="nextFullImage()">
+	<div  ng-show="true" class="com-cinema-arrow com-cinema-arrow-right" ng-click="nextCinema()">
 		<span class="glyphicon glyphicon-menu-right"></span>
 	</div>
-	
+	<mod-footer></mod-footer>
 </div>
 
