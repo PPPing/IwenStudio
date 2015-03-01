@@ -5,20 +5,20 @@
 		<img ng-src="{{item.thumnail}}">
 	</div>
 </div>
-<div class="gallery-slideShow" ng-show="slideShowEnable">
-	<div class="gallery-slideShow-imageBox">	
-		<div class="gallery-slideShow-fullImage in"></div>
+<div class="gallery-slideShow" ng-show="slideShowEnable"  ng-class="!autoSlide?'gallery-slideShow-black':''">
+	<div class="gallery-slideShow-imageBox" ng-class="autoSlide?'fullScreenShow':''">	
+		<div class="gallery-slideShow-fullImage in" ></div>
 		<div class="gallery-slideShow-fullImage out"></div>
 	</div>
 	<img src="images/ajax-loader.gif" class="gallery-slideShow-loading hide">
-	<div class="gallery-slideShow-switch" ng-click="toggleAutoSlide()">
+	<div class="gallery-slideShow-switch" ng-click="toggleAutoSlide()" ng-class="!autoSlide?'gallery-slideShow-black':''">
 			Slideshow.{{autoSlide?"OFF":"ON"}}
 	</div>
-	<div class="gallery-slideShow-close" ng-click="slideHide()">
+	<div class="gallery-slideShow-close" ng-click="slideHide()" ng-class="!autoSlide?'gallery-slideShow-black':''">
 		<span class="glyphicon glyphicon-remove" ></span>
 		Close
 	</div>
-	<div  ng-show="!autoSlide" class="gallery-slideShow-arrow gallery-slideShow-arrow-left" ng-click="preFullImage()" ng-swipe-left="preFullImage()">
+	<div  ng-show="!autoSlide" class="gallery-slideShow-arrow gallery-slideShow-arrow-left"  ng-click="preFullImage()" ng-swipe-left="preFullImage()">
 		<span class="glyphicon glyphicon-menu-left"></span>
 	</div>
 	<div  ng-show="!autoSlide" class="gallery-slideShow-arrow gallery-slideShow-arrow-right" ng-click="nextFullImage()" ng-swipe-right="nextFullImage()">
