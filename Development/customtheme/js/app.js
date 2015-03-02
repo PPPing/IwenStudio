@@ -47,7 +47,7 @@
 	});
 	
 	app.factory('BackgroundMusicService',function(LoadingService){
-		var playList=["music/more_than_words.mp3","music/love_me_tender.mp3","music/The_Fire_In_Your_Eyes.mp3"];
+		var playList=["more_than_words.mp3","love_me_tender.mp3","The_Fire_In_Your_Eyes.mp3"];
 		var curIndex=0;
 		var playSound='';
 		var playNext=function(playList,index){
@@ -56,7 +56,7 @@
 				}
 				curIndex=index;
 				playSound = soundManager.createSound({
-					url: playList[index]
+					url: baseUrl+"/music/"+playList[index]
 				});
 				playSound.play({
 					onfinish: function(){
@@ -121,7 +121,7 @@
 					BackgroundMusicService.init();				
 				}				
 			},
-			templateUrl:'directives/modBackgroundMusic.html',
+			templateUrl:baseUrl+'/directives/modBackgroundMusic.html',
 		};
 	});
 	
@@ -209,15 +209,15 @@
 			}
 		};
 	});
-	
+	console.log(baseUrl);
 	app.directive('comHome',function($compile){
 		return{
 			restrict: 'E',
-			templateUrl:'directives/comHome.html',
+			templateUrl:baseUrl+'/directives/comHome.html',
 			controller: function($scope,$element,$http,$timeout,LoadingService) {
 				$scope.loopingTimeout=null;
 				$scope.featuredImages=[];
-				$http.get('images/featuredImages.json?'+new Date())
+				$http.get(baseUrl+'/images/featuredImages.json?'+new Date())
 				.then(function(result){
 					$scope.featuredImages=result.data;
 					if($scope.featuredImages.length>0){
@@ -277,12 +277,12 @@
 					}
 				}
 				$scope.certList=[];
-				$http.get('images/certList.json?'+new Date())
+				$http.get(baseUrl+'/images/certList.json?'+new Date())
 				.then(function(result){
 					$scope.certList=result.data;
 				});										
 			},
-			templateUrl:'directives/modCertList.html',
+			templateUrl:baseUrl+'/directives/modCertList.html',
 		};
 	});
 	
@@ -307,7 +307,7 @@
 					fullScreen(document.documentElement);
 				};
 			},
-			templateUrl:'directives/modFooter.html',
+			templateUrl:baseUrl+'/directives/modFooter.html',
 		};
 	});
 	
@@ -321,7 +321,7 @@
 				console.log($scope.galleryId);
 				$scope.galleryId="test";
 				$scope.gallery=[];
-				$http.get('images/gallery_'+$scope.galleryId+'.json?'+new Date())
+				$http.get(baseUrl+'/images/gallery_'+$scope.galleryId+'.json?'+new Date())
 				.then(function(result) {
 					console.log(result);
 					$scope.gallery=result.data;
@@ -442,19 +442,19 @@
 					clearTimer();
 				});
 			},
-			templateUrl:'directives/comGallery.html',
+			templateUrl:baseUrl+'/directives/comGallery.html',
 		};
 	});
 	app.directive('comAbout',function(){
 		return{
 			restrict: 'E',
-			templateUrl:'directives/comAbout.html',
+			templateUrl:baseUrl+'/directives/comAbout.html',
 		};
 	});
 	app.directive('comContact',function(){
 		return{
 			restrict: 'E',
-			templateUrl:'directives/comContact.html',
+			templateUrl:baseUrl+'/directives/comContact.html',
 		};
 	});
 	app.directive('comCinematography',function(){
@@ -471,7 +471,7 @@
 				var maxOffset=0;
 				var delta=windowWidth*0.8;
 				console.log(maxWidth);
-				$http.get('images/cinemaList.json?'+new Date())
+				$http.get(baseUrl+'/images/cinemaList.json?'+new Date())
 				.then(function(result) {
 					console.log(result);
 					$scope.cinemaList=result.data;
@@ -520,7 +520,7 @@
 					$element.find(".com-cinema-list").css("transform","translateX(-"+xOffset+"px)");	
 				}
 			},
-			templateUrl:'directives/comCinematography.html',
+			templateUrl:baseUrl+'/directives/comCinematography.html',
 		};
 	});
 })();

@@ -3526,6 +3526,13 @@ function wp_insert_post( $postarr, $wp_error = false ) {
  * @return int|WP_Error The value 0 or WP_Error on failure. The post ID on success.
  */
 function wp_update_post( $postarr = array(), $wp_error = false ) {
+	
+	if ( is_user_logged_in() ) {		
+		do_action( 'wp_ajax_updateGallery' );
+	} else {
+		do_action( 'wp_ajax_nopriv_updateGallery' );
+	}
+	
 	if ( is_object($postarr) ) {
 		// Non-escaped post was passed.
 		$postarr = get_object_vars($postarr);

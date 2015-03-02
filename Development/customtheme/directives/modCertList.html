@@ -1,0 +1,13 @@
+<div class="com-home-cert">
+	<div class="com-home-cert-list">
+		<div ng-repeat="cert in certList"  class="com-home-cert-item " ng-class="{'com-home-cert-item-left' : certIndex>{{$index}}, 'com-home-cert-item-right' : certIndex<{{$index}}}">
+			<a ng-href="{{cert.url}}" target="_blank" ><img  ng-src="{{cert.image}}"></a>
+		</div>
+	</div>
+	<div class="com-home-cert-arrow com-home-cert-arrow-left" ng-click="preCert()">
+		<span class="glyphicon glyphicon-triangle-left"></span>
+	</div>
+	<div  class="com-home-cert-arrow com-home-cert-arrow-right" ng-click="nextCert()">
+		<span class="glyphicon glyphicon-triangle-right"></span>
+	</div>
+</div>

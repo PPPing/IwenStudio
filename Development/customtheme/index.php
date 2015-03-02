@@ -11,9 +11,9 @@
 		<meta name="description" content="IWEN Studio Photography Cinematography">
 		<meta name="author" content="Zhong Ping" />
 		<title>IWEN Studio Photography and Cinematography</title>
-		<link rel="stylesheet" type="text/css" href="./css/normalize.css" />
-		<link rel="stylesheet" type="text/css" href="./css/bootstrap.css" />
-		<link rel="stylesheet" type="text/css" href="./css/style.css" />
+		<link rel="stylesheet" type="text/css" href="<?php echo $templateUrl;?>/css/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="<?php echo $templateUrl;?>/css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="<?php echo $templateUrl;?>/css/style.css" />
 	</head>
 	<body>
 		<div class="loading" style="display:block">
@@ -88,10 +88,10 @@
 	</body>
 	<style>
 	</style>
-	<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
-	<script type="text/javascript" src="js/soundmanager2-jsmin.js"></script>
-	<script type="text/javascript" src="js/angular.min.js"></script>
-	<script type="text/javascript" src="js/app.js"></script>
+	<script type="text/javascript" src="<?php echo $templateUrl;?>js/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="<?php echo $templateUrl;?>js/soundmanager2-jsmin.js"></script>
+	<script type="text/javascript" src="<?php echo $templateUrl;?>js/angular.min.js"></script>
+	<script type="text/javascript" src="<?php echo $templateUrl;?>js/app.js"></script>
 	<script>		
 	</script>
 </html>

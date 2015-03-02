@@ -1,3 +1,6 @@
+<?php
+$baseUrl=get_template_directory_uri();
+?>
 <!DOCTYPE html>
 <html lang="en" ng-app="iwenStudio">
 	<head>
@@ -11,14 +14,17 @@
 		<meta name="description" content="IWEN Studio Photography Cinematography">
 		<meta name="author" content="Zhong Ping" />
 		<title>IWEN Studio Photography and Cinematography</title>
-		<link rel="stylesheet" type="text/css" href="./css/normalize.css" />
-		<link rel="stylesheet" type="text/css" href="./css/bootstrap.css" />
-		<link rel="stylesheet" type="text/css" href="./css/style.css" />
+		<link rel="stylesheet" type="text/css" href="<?php echo $baseUrl;?>/css/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="<?php echo $baseUrl;?>/css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="<?php echo $baseUrl;?>/css/style.css" />
 	</head>
+	<script type="text/javascript">
+	var baseUrl='<?php echo $baseUrl;?>';	
+	</script>
 	<body>
 		<div class="loading" style="display:block">
 			<div class="landing-up">
-				<div class="logo"><img width=200 src="./images/logo.png"></div>
+				<div class="logo"><img width=200 src="<?php echo $baseUrl;?>/images/logo.png"></div>
 				<div class="loading-bar">
 					<div class="loading-bar-progress"></div>
 					<div class="loading-bar-num">0%</div>
@@ -35,7 +41,7 @@
 				<li class="mobile-menu-trigger" ng-class="!isActive('home')?'mobile-menu-trigger-dark':''"  ng-click="toggleMenu()"><span class="glyphicon glyphicon-menu-hamburger"></span></li>
 				<li class=" top-menu-item" ng-class="isActive('home')?'active-home':''" ng-click="changeComponents('home')">
 					<div class="top-menu-item-text">HOME</div>
-					<div class="top-menu-item-mobile-logo"><a href="http://localhost/GitHub/IwenStudio/Development/html/"><img src="./images/logo_white.png"></a></div>
+					<div class="top-menu-item-mobile-logo"><a href="http://localhost/GitHub/IwenStudio/Development/html/"><img src="<?php echo $baseUrl;?>/images/logo_white.png"></a></div>
 					<div class="top-menu-item-underline"></div>
 				</li>
 				<li class="top-menu-item-vline">
@@ -57,7 +63,7 @@
 					<div class="top-menu-item-underline"></div>
 				</li>
 				<li class="top-menu-item destop-only">
-					<a href="http://localhost/GitHub/IwenStudio/Development/html/"><img class="top-menu-item-logo" src="./images/logo.png"></a>
+					<a href="http://localhost/GitHub/IwenStudio/Development/html/"><img class="top-menu-item-logo" src="<?php echo $baseUrl;?>/images/logo.png"></a>
 					<!-- <div class="top-menu-item-logo"><a>LOGO</a></div> -->
 				</li>
 				<li class=" top-menu-item" ng-class="isActive('cinematography')?'active':''" ng-click="changeComponents('cinematography')">
@@ -86,14 +92,12 @@
 		</div>
 		<com-container ></com-container> 			
 	</body>
-	<style>
-	</style>
-	<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
-	<script type="text/javascript" src="js/soundmanager2-jsmin.js"></script>
-	<script type="text/javascript" src="js/angular.min.js"></script>
-	<script type="text/javascript" src="js/app.js"></script>
-	<script>		
-	</script>
+	
+	<script type="text/javascript" src="<?php echo $baseUrl;?>/js/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="<?php echo $baseUrl;?>/js/soundmanager2-jsmin.js"></script>
+	<script type="text/javascript" src="<?php echo $baseUrl;?>/js/angular.min.js"></script>
+	<script type="text/javascript" src="<?php echo $baseUrl;?>/js/app.js"></script>
+	
 </html>
 
 
