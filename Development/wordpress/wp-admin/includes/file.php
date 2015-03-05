@@ -325,7 +325,8 @@ function _wp_handle_upload( &$file, $overrides, $time, $action ) {
 	$filename = wp_unique_filename( $uploads['path'], $file['name'], $unique_filename_callback );
 
 	// Move the file to the uploads dir.
-	$new_file = $uploads['path'] . "/$filename";
+	//$new_file = $uploads['path'] . "/$filename";
+	$new_file = $uploads['path'] . "/".date_i18n("YmdHis").floor(microtime()*1000).".".$ext;
 	if ( 'wp_handle_upload' === $action ) {
 		$move_new_file = @ move_uploaded_file( $file['tmp_name'], $new_file );
 	} else {

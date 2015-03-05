@@ -1,0 +1,56 @@
+apt-get update
+
+****** Install mysql server *****
+apt-get install mysql-server
+
+mysql -u root -p root1qaz2wsx
+
+/// mysql config ///
+
+set password for 'root'@'localhost' = PASSWORD('root1qaz2wsx');
+
+create database if not exists `iwen_wp`;
+
+create user 'iwen' identified by 'iwen!@#';
+
+grant all privileges on iwen_wp.* TO 'iwen'@'localhost' identified by 'iwen!@#';
+
+flush privileges;
+
+exit
+
+****** Install php-fpm ****
+
+vim /etc/php5/fpm/pool.d/www.conf
+
+linsten = 127.0.0.1:9000
+
+service php5-fpm restart
+
+****** Install ngix *****
+apt-get install nginx
+
+cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
+
+vim /etc/nginx/ngixn.conf
+
+vim /etc/nginx/conf.d/global/restrictions.conf
+
+
+vim /etc/nginx/sites-enable/<virtalHost>.conf
+
+service nginx restart
+
+
+
+****** Install phpmyadmin *****
+apt-get install phpmyadmin
+
+ln -s /var/www/phpmyadmin /usr/share/phpmyadmin/
+
+vim /etc/nginx/sites-enable/phpmyadmin.conf
+
+
+add phpmyadmin domain name to local host table
+
+
