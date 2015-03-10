@@ -116,8 +116,13 @@
 			controller:function($scope,$element,$http,BackgroundMusicService,LoadingService) {
 				$scope.togglePause=BackgroundMusicService.togglePause;
 				$scope.isPlaying=BackgroundMusicService.isPlaying;
-				LoadingService.pushLoadedCallback(BackgroundMusicService.play);
+				LoadingService.pushLoadedCallback(function(){
+					if(!BackgroundMusicService.isPlaying()){
+						BackgroundMusicService.play();
+					}
+					});
 				if(!BackgroundMusicService.isPlaying()){
+					console.log("BackgroundMusicService.init()");
 					BackgroundMusicService.init();				
 				}				
 			},
@@ -317,9 +322,17 @@
 			scope: {
 				galleryId:'@galleryId'
 			},
-			controller: function($scope,$element,$http,$interval,$timeout,TimerService) {
+			controller: function($scope,$element,$window,$http,$interval,$timeout,TimerService) {
 				console.log($scope.galleryId);
-				//$scope.galleryId="test";
+				var w = angular.element($window)
+				$scope.getWindowHeight=function(){	
+					return w.height();
+				}			
+				var windowHeight=$scope.getWindowHeight();
+				//var minHeight=windowHeight;
+				
+				$element.find(".gallery-thumnails").css("min-height",(windowHeight-90)+'px');
+				
 				$scope.gallery=[];
 				$http.get(baseUrl+'/jsonData/gallery_'+$scope.galleryId+'.json?'+new Date())
 				.then(function(result) {
@@ -382,7 +395,7 @@
 					timer++;
 					console.log(timer);
 				};
-				var autoSlideInterval=5;
+				var autoSlideInterval=4;
 				
 				 var autoSlideNext=function(index){
 					 console.log();

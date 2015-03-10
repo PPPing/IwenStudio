@@ -41,7 +41,7 @@ $baseUrl=get_template_directory_uri();
 				<li class="mobile-menu-trigger" ng-class="!isActive('home')?'mobile-menu-trigger-dark':''"  ng-click="toggleMenu()"><span class="glyphicon glyphicon-menu-hamburger"></span></li>
 				<li class=" top-menu-item" ng-class="isActive('home')?'active-home':''" ng-click="changeComponents('home')">
 					<div class="top-menu-item-text">HOME</div>
-					<div class="top-menu-item-mobile-logo"><a href="http://localhost/GitHub/IwenStudio/Development/html/"><img src="<?php echo $baseUrl;?>/images/logo_white.png"></a></div>
+					<div class="top-menu-item-mobile-logo"><a href="http://iwenphotography.com/"><img src="<?php echo $baseUrl;?>/images/logo_white.png"></a></div>
 					<div class="top-menu-item-underline"></div>
 				</li>
 				<li class="top-menu-item-vline">

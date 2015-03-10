@@ -5,16 +5,18 @@
 		<img ng-src="{{item.thumnail}}">
 	</div>
 </div>
+
+
 <div class="gallery-slideShow" ng-show="slideShowEnable"  ng-class="!autoSlide?'gallery-slideShow-black':''">
-	<div class="gallery-slideShow-imageBox" ng-class="autoSlide?'fullScreenShow':''">	
+	<div class="gallery-slideShow-imageBox" >	
 		<div class="gallery-slideShow-fullImage in" ></div>
 		<div class="gallery-slideShow-fullImage out"></div>
 	</div>
 	<img src="http://iwenphotography.com/wp-content/themes/customtheme/images/ajax-loader.gif" class="gallery-slideShow-loading hide">
-	<div class="gallery-slideShow-switch" ng-click="toggleAutoSlide()" ng-class="!autoSlide?'gallery-slideShow-black':''">
+	<div class="gallery-slideShow-switch gallery-slideShow-black" ng-click="toggleAutoSlide()">
 			Slideshow.{{autoSlide?"OFF":"ON"}}
 	</div>
-	<div class="gallery-slideShow-close" ng-click="slideHide()" ng-class="!autoSlide?'gallery-slideShow-black':''">
+	<div class="gallery-slideShow-close gallery-slideShow-black" ng-click="slideHide()">
 		<span class="glyphicon glyphicon-remove" ></span>
 		Close
 	</div>
@@ -26,4 +28,12 @@
 	</div>	
 	<mod-footer></mod-footer>
 </div>
+</div>
+
+<div class="mod-footer-gallery" style="float:left;position: relative;" ng-show="!slideShowEnable">
+	<div class="mod-footer-actions">
+		<span class="mod-footer-actions-fullscreen glyphicon glyphicon-fullscreen" ng-click="launchFullScreen()"></span>
+		<mod-background-music></mod-background-music>
+	</div>
+	<div class="copyright">Website Design by Ping | ©iwenphotography.com All rights reserved.</div>
 </div>

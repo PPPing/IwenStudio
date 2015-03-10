@@ -117,6 +117,13 @@ background-image: linear-gradient(to bottom, rgb(224, 224, 224) 0%, rgb(255, 255
 	right:15px;
 	text-align:right;
 }
+.mod-footer-gallery{
+	position:relative;
+	width:100%;
+	padding-right:15px;
+	padding-bottom:10px;
+	text-align:right;
+}
 .copyright{
 	font-size:9px;
 }
@@ -342,18 +349,18 @@ background-image: linear-gradient(to bottom, rgb(224, 224, 224) 0%, rgb(255, 255
 
 .com-about-info-image-wechat{
 	display:inline-block;
-	height:150px;
-	width:150px;
+	height:140px;
+	width:140px;
 	background-image:url('http://iwenphotography.com/wp-content/themes/customtheme/images/wechat.png');
 	background-repeat:no-repeat;
 	background-position:center;
 	background-size:contain;
-	margin:0 10px;
+	margin-right:20px;
 }
 .com-about-info-image-weibo{
 	display:inline-block;
-	height:150px;
-	width:150px;
+	height:140px;
+	width:140px;
 	background-image:url('http://iwenphotography.com/wp-content/themes/customtheme/images/weibo.png');
 	background-repeat:no-repeat;
 	background-position:center;
@@ -395,21 +402,30 @@ cursor:pointer;
 	top:0;
 	left:0;
 	padding:4px;
-	border-right:1px solid rgba(255, 255, 255, 0.76);
-	border-bottom:1px solid rgba(255, 255, 255, 0.76);
+	font-size:14px;
+	cursor:pointer;
+	/* border-right:1px solid rgba(255, 255, 255, 0.76);
+	border-bottom:1px solid rgba(255, 255, 255, 0.76); */
 }
 .gallery-slideShow-close{
 	position:absolute;
 	top:0;
 	right:0;
+	font-size:14px;
 	padding:4px;
-	border-left:1px solid rgba(255, 255, 255, 0.76);
-	border-bottom:1px solid rgba(255, 255, 255, 0.76);
+	cursor:pointer;
+	/* border-left:1px solid rgba(255, 255, 255, 0.76);
+	border-bottom:1px solid rgba(255, 255, 255, 0.76); */
 }
 .gallery-slideShow-black{
-	color:#222;
-	border-color:#222;
-	
+	color: #6F6F6F;
+	-webkit-transition: color 0.3s ease-out;
+	-moz-transition: color 0.3s ease-out;
+	-o-transition: color 0.3s ease-out;
+	transition: color 0.3s ease-out;
+}
+.gallery-slideShow-switch:hover,.gallery-slideShow-close:hover{
+	color:#222;	
 }
 .gallery-slideShow-imageBox{
 	position:absolute;
@@ -584,6 +600,9 @@ cursor:pointer;
     }
 }
 @media (max-width: 768px) {
+	.mod-footer-gallery{
+		text-align:center;
+	}
   .loading-footer{
 	position:absolute;
 	bottom:3px;
@@ -634,7 +653,8 @@ cursor:pointer;
 	display: block;
 	text-align: center;
 	height: auto;
-	margin-bottom:5px;
+	margin-top:10px;
+	margin-bottom:35px;
   }
  
   .mobile-menu-trigger{
@@ -748,8 +768,9 @@ cursor:pointer;
   }
   .com-about-info-image-weibo,.com-about-info-image-wechat{
 	display:inline-block;
-	height:200px;
-	width:200px;
+	height:150px;
+	width:100%;
+	margin:0;
   }
   
   .com-cinema{
@@ -800,8 +821,8 @@ cursor:pointer;
 
 .gallery-slideShow-imageBox {
 position: absolute;
-top: 81px;
-bottom: 81px;
+top: 78px;
+bottom: 78x;
 width: 100%;
 text-align: center;
 overflow: hidden;
@@ -813,7 +834,8 @@ overflow: hidden;
 }
 .gallery-slideShow-close,.gallery-slideShow-switch{
 	top:50px;
-	font-size:18px;
+	font-size:14px;
+	color:#222;
  }
 .gallery-slideShow-switch.gallery-slideShow-black,
 .gallery-slideShow-close.gallery-slideShow-black{
