@@ -1,6 +1,21 @@
 (function(){
 	var app = angular.module('iwenStudio', []);	
-
+	
+	app.factory('CommonService',function($window){
+		var w = angular.element($window);
+		var CommonService = {
+			windowHeight:function(){
+				return w.height();
+			},
+			windowWidth:function(){
+				return w.width();
+			},
+			isMobile:function(){
+				return w.width()<768;
+			}
+		};
+		return CommonService;
+	});
 	app.factory('LoadingService',function(){
 		var progress=0;
 		var loadedCallbacks=[];
@@ -24,7 +39,7 @@
 					loadedCallbacks[i]();
 				}
 			}
-			$(".loading").delay( 500 ).fadeOut("fast");
+			$(".loading").addClass("loaded").fadeOut("slow");
 		}
 		var LoadingService={
 			//Total: 100 FeaturedImage:80 BGM:20
@@ -60,7 +75,8 @@
 				});
 				playSound.play({
 					onfinish: function(){
-						playNext(playList,index+1);
+						
+						playNext(playList,curIndex+1);
 					}
 				});
 			}
@@ -87,7 +103,7 @@
 				console.log("play");
 				playSound.play({
 					onfinish: function(){
-						playNext(playList,index+1);
+						playNext(playList,curIndex+1);
 					}
 				});
 			},
@@ -219,10 +235,11 @@
 		return{
 			restrict: 'E',
 			templateUrl:baseUrl+'/directives/comHome.html',
-			controller: function($scope,$element,$http,$timeout,LoadingService) {
+			controller: function($scope,$element,$http,$timeout,LoadingService, CommonService) {
 				$scope.loopingTimeout=null;
 				$scope.featuredImages=[];
-				$http.get(baseUrl+'/jsonData/home.json?'+new Date())
+				console.log("isMobile : "+CommonService.isMobile());
+				$http.get(baseUrl+'/jsonData/home'+(CommonService.isMobile()?'-mobile':'')+'.json?'+new Date())
 				.then(function(result){
 					$scope.featuredImages=result.data;
 					if($scope.featuredImages.length>0){
@@ -290,15 +307,13 @@
 			templateUrl:baseUrl+'/directives/modCertList.html',
 		};
 	});
-	
-	app.directive('modFooter',function($compile) {
+	app.directive('modFullScreen',function($compile) {
 		return {
 			restrict: 'E',
 			scope: {},
 			replace:true,
 			controller:function($scope,$element,$http,MenuService) {
-				$scope.isGalleryMode
-				
+				var isFullScreen = false;
 				var fullScreen=function(element) {
 							if(element.requestFullScreen) {
 								element.requestFullScreen();
@@ -308,9 +323,36 @@
 							element.webkitRequestFullScreen();
 							}
 				};
-				$scope.launchFullScreen=function(){
-					fullScreen(document.documentElement);
+				var exitFullscreen = function() {
+							if(document.exitFullscreen) {
+								document.exitFullscreen();
+							} else if(document.mozCancelFullScreen) {
+								document.mozCancelFullScreen();
+							} else if(document.webkitExitFullscreen) {
+								document.webkitExitFullscreen();
+							}
 				};
+				$scope.toggleFullScreen=function(){
+					isFullScreen = !isFullScreen;
+					if(isFullScreen){
+						fullScreen(document.documentElement);
+					}else{
+						exitFullscreen();
+					}
+					
+				};
+			},
+			templateUrl:baseUrl+'/directives/modFullScreen.html',
+		};
+	});
+	
+	app.directive('modFooter',function($compile) {
+		return {
+			restrict: 'E',
+			scope: {},
+			replace:true,
+			controller:function($scope,$element,$http,MenuService) {
+				
 			},
 			templateUrl:baseUrl+'/directives/modFooter.html',
 		};
@@ -322,13 +364,12 @@
 			scope: {
 				galleryId:'@galleryId'
 			},
-			controller: function($scope,$element,$window,$http,$interval,$timeout,TimerService) {
+			controller: function($scope,$element,$http,$interval,$timeout,CommonService,TimerService) {
 				console.log($scope.galleryId);
-				var w = angular.element($window)
 				$scope.getWindowHeight=function(){	
-					return w.height();
+					return CommonService.windowHeight();
 				}			
-				var windowHeight=$scope.getWindowHeight();
+				var windowHeight=CommonService.windowHeight();
 				//var minHeight=windowHeight;
 				
 				$element.find(".gallery-thumnails").css("min-height",(windowHeight-90)+'px');
@@ -473,13 +514,12 @@
 	app.directive('comCinematography',function(){
 		return{
 			restrict: 'E',
-			controller: function($scope,$http,$element,$window) {			
+			controller: function($scope,$http,$element,CommonService) {			
 				$scope.cinemaList=[];
-				var w = angular.element($window)
 				$scope.getWindowWidth=function(){	
-					return w.width();
+					return CommonService.windowWidth();
 				}			
-				var windowWidth=$scope.getWindowWidth();
+				var windowWidth=CommonService.windowWidth();
 				var maxWidth=windowWidth;
 				var maxOffset=0;
 				var delta=windowWidth*0.8;

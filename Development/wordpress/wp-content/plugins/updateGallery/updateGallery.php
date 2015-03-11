@@ -56,7 +56,7 @@ function updateImageListJSON(){
 				$imageNode->fullImage=wp_get_attachment_image_src($imageID, 'large')[0];
 				array_push($dataArray, $imageNode);
 			}
-		}else if($title=='home'){
+		}else if($title=='home'||$title=='home-mobile'){
 			
 			foreach ($imageIDs as $imageID)
 			{

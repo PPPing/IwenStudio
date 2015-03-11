@@ -63,7 +63,7 @@ $baseUrl=get_template_directory_uri();
 					<div class="top-menu-item-underline"></div>
 				</li>
 				<li class="top-menu-item destop-only">
-					<a href="http://localhost/GitHub/IwenStudio/Development/html/"><img class="top-menu-item-logo" src="<?php echo $baseUrl;?>/images/logo.png"></a>
+					<a href="http://iwenphotography.com/"><img class="top-menu-item-logo" src="<?php echo $baseUrl;?>/images/logo.png"></a>
 					<!-- <div class="top-menu-item-logo"><a>LOGO</a></div> -->
 				</li>
 				<li class=" top-menu-item" ng-class="isActive('cinematography')?'active':''" ng-click="changeComponents('cinematography')">
@@ -85,7 +85,7 @@ $baseUrl=get_template_directory_uri();
 				<li class="top-menu-item-vline">
 				</li>
 				<li class=" top-menu-item">
-					<a href="http://weibo.com/iwenvision" target="_self" class="top-menu-item-text">BLOG</a>
+					<a href="http://weibo.com/iwenvision" target="_bank" class="top-menu-item-text">BLOG</a>
 					<div class="top-menu-item-underline"></div>
 				</li>
 			</ul>
