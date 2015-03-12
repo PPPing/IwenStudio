@@ -313,7 +313,7 @@
 			scope: {},
 			replace:true,
 			controller:function($scope,$element,$http,MenuService) {
-				var isFullScreen = false;
+				$scope.isFullScreen = false;
 				var fullScreen=function(element) {
 							if(element.requestFullScreen) {
 								element.requestFullScreen();
@@ -333,8 +333,8 @@
 							}
 				};
 				$scope.toggleFullScreen=function(){
-					isFullScreen = !isFullScreen;
-					if(isFullScreen){
+					$scope.isFullScreen = !$scope.isFullScreen;
+					if($scope.isFullScreen){
 						fullScreen(document.documentElement);
 					}else{
 						exitFullscreen();
@@ -358,7 +358,7 @@
 		};
 	});
 	
-	app.directive('comGallery',function(){
+	app.directive('comGallery',function($compile){
 		return{
 			restrict: 'E',
 			scope: {
@@ -379,7 +379,13 @@
 				.then(function(result) {
 					console.log(result);
 					$scope.gallery=result.data;
+					
 				});
+				
+				/* function loadThumnails(0){
+					
+				} */
+				
 				var timer = 0;
 				$scope.updateTimeInterval=null;
 				$scope.switchImageTimeOut=null;
@@ -390,7 +396,7 @@
 					$scope.slideShowEnable=true;
 					$scope.changeFullImage(index);
 				}
-				$scope.autoSlide=false;
+				$scope.autoSlide=true;
 				$scope.slideHide=function(){
 					$scope.slideShowEnable=false;
 					clearTimer();

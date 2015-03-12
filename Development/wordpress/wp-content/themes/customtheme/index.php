@@ -85,7 +85,7 @@ $baseUrl=get_template_directory_uri();
 				<li class="top-menu-item-vline">
 				</li>
 				<li class=" top-menu-item">
-					<a href="http://weibo.com/iwenvision" target="_bank" class="top-menu-item-text">BLOG</a>
+					<a href="http://blog.sina.com.cn/iwenvision" target="_bank" class="top-menu-item-text">BLOG</a>
 					<div class="top-menu-item-underline"></div>
 				</li>
 			</ul>
