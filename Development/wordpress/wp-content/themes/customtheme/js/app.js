@@ -379,12 +379,41 @@
 				.then(function(result) {
 					console.log(result);
 					$scope.gallery=result.data;
-					
+					loadThumnails(0);
 				});
-				
-				/* function loadThumnails(0){
-					
-				} */
+				$scope.thumnailIndex = 0;
+				$scope.enableLoading=true;
+				$scope.thumnailTimeout = null;
+				function thumnailIndexIncrease(){
+					if($scope.thumnailIndex>$scope.gallery.length+5){
+						return;
+					}
+					$scope.thumnailIndex+=1;
+					console.log("$scope.thumnailIndex : "+$scope.thumnailIndex);
+					$scope.thumnailTimeout = $timeout(thumnailIndexIncrease,100);
+				}
+				function loadThumnails(index){
+					$scope.thumnailIndex=index;
+					if(!$scope.enableLoading){
+						return;
+					}
+					if($scope.thumnailIndex>=$scope.gallery.length&&$scope.thumnailIndex<$scope.gallery.length+5){
+						$scope.thumnailTimeout = $timeout(thumnailIndexIncrease,100);
+						return;
+					}
+					var thumnailUrl = $scope.gallery[index].thumnail;
+					var image = $( new Image() ).load(function( event ) {
+									var html = "<div class='col-xs-6 col-sm-2 gallery-thumnail-item invisible' ng-click='slideShow("+index+")' ng-class='{visible:thumnailIndex>"+(index+5)+"}' >"
+												+"<img src='"+thumnailUrl+"'>"
+												+"</div>";
+									var el = $compile( html )( $scope );
+									$element.find(".gallery-thumnails").append( el );
+									
+									loadThumnails(index+1);
+								}).error(function( event ) {
+									console.log(event);
+								}).prop( "src", thumnailUrl );
+				} 
 				
 				var timer = 0;
 				$scope.updateTimeInterval=null;
@@ -436,6 +465,9 @@
 					}
 					if($scope.switchImageTimeOut){
 						$timeout.cancel($scope.switchImageTimeOut);
+					}
+					if($scope.thumnailTimeout){
+						$timeout.cancel($scope.thumnailTimeout);
 					}
 				}
 				var updateTimer=function(){
@@ -500,6 +532,7 @@
 				
 				$element.on('$destroy', function() {
 					clearTimer();
+					$scope.enableLoading = false;
 				});
 			},
 			templateUrl:baseUrl+'/directives/comGallery.html',
